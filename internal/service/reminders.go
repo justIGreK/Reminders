@@ -101,3 +101,12 @@ func (s *RemindersService) DeleteReminder(ctx context.Context, userID, rmID stri
 	}
 	return nil
 }
+
+func (s *RemindersService) GetReminders(ctx context.Context, userID string) ([]models.Reminder, error) {
+	rms, err := s.RemindersRepo.GetReminders(ctx, userID)
+	if err != nil{
+		log.Println(err)
+		return nil, err
+	}
+	return rms, nil
+}

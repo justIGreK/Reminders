@@ -11,6 +11,7 @@ option go_package = "proto;reminders";
 service RemindersService {
   rpc AddReminder(AddReminderRequest) returns (AddReminderResponse);
   rpc GetUpcomingReminders(google.protobuf.Empty) returns (GetUpcomingRemindersResponse);
+  rpc GetReminders(GetRemindersRequest) returns (GetUpcomingRemindersResponse);
   rpc MarkReminderAsSent(DeleteReminderRequest) returns (google.protobuf.Empty);
   rpc DeleteReminder(DeleteReminderRequest) returns (google.protobuf.Empty);
 }
@@ -24,6 +25,10 @@ message CreateReminder {
   string action = 2;
   string time = 3;
   google.protobuf.StringValue date = 4;
+}
+
+message GetRemindersRequest {
+  string userId = 1;
 }
 
 message AddReminderResponse {

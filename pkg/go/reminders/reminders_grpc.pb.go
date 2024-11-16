@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	RemindersService_AddReminder_FullMethodName          = "/reminders.RemindersService/AddReminder"
 	RemindersService_GetUpcomingReminders_FullMethodName = "/reminders.RemindersService/GetUpcomingReminders"
+	RemindersService_GetReminders_FullMethodName         = "/reminders.RemindersService/GetReminders"
 	RemindersService_MarkReminderAsSent_FullMethodName   = "/reminders.RemindersService/MarkReminderAsSent"
 	RemindersService_DeleteReminder_FullMethodName       = "/reminders.RemindersService/DeleteReminder"
 )
@@ -32,6 +33,7 @@ const (
 type RemindersServiceClient interface {
 	AddReminder(ctx context.Context, in *AddReminderRequest, opts ...grpc.CallOption) (*AddReminderResponse, error)
 	GetUpcomingReminders(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUpcomingRemindersResponse, error)
+	GetReminders(ctx context.Context, in *GetRemindersRequest, opts ...grpc.CallOption) (*GetUpcomingRemindersResponse, error)
 	MarkReminderAsSent(ctx context.Context, in *DeleteReminderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteReminder(ctx context.Context, in *DeleteReminderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -62,6 +64,15 @@ func (c *remindersServiceClient) GetUpcomingReminders(ctx context.Context, in *e
 	return out, nil
 }
 
+func (c *remindersServiceClient) GetReminders(ctx context.Context, in *GetRemindersRequest, opts ...grpc.CallOption) (*GetUpcomingRemindersResponse, error) {
+	out := new(GetUpcomingRemindersResponse)
+	err := c.cc.Invoke(ctx, RemindersService_GetReminders_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *remindersServiceClient) MarkReminderAsSent(ctx context.Context, in *DeleteReminderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, RemindersService_MarkReminderAsSent_FullMethodName, in, out, opts...)
@@ -86,6 +97,7 @@ func (c *remindersServiceClient) DeleteReminder(ctx context.Context, in *DeleteR
 type RemindersServiceServer interface {
 	AddReminder(context.Context, *AddReminderRequest) (*AddReminderResponse, error)
 	GetUpcomingReminders(context.Context, *emptypb.Empty) (*GetUpcomingRemindersResponse, error)
+	GetReminders(context.Context, *GetRemindersRequest) (*GetUpcomingRemindersResponse, error)
 	MarkReminderAsSent(context.Context, *DeleteReminderRequest) (*emptypb.Empty, error)
 	DeleteReminder(context.Context, *DeleteReminderRequest) (*emptypb.Empty, error)
 }
@@ -99,6 +111,9 @@ func (UnimplementedRemindersServiceServer) AddReminder(context.Context, *AddRemi
 }
 func (UnimplementedRemindersServiceServer) GetUpcomingReminders(context.Context, *emptypb.Empty) (*GetUpcomingRemindersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUpcomingReminders not implemented")
+}
+func (UnimplementedRemindersServiceServer) GetReminders(context.Context, *GetRemindersRequest) (*GetUpcomingRemindersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReminders not implemented")
 }
 func (UnimplementedRemindersServiceServer) MarkReminderAsSent(context.Context, *DeleteReminderRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MarkReminderAsSent not implemented")
@@ -154,6 +169,24 @@ func _RemindersService_GetUpcomingReminders_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RemindersService_GetReminders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRemindersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RemindersServiceServer).GetReminders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RemindersService_GetReminders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RemindersServiceServer).GetReminders(ctx, req.(*GetRemindersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RemindersService_MarkReminderAsSent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteReminderRequest)
 	if err := dec(in); err != nil {
@@ -204,6 +237,10 @@ var RemindersService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUpcomingReminders",
 			Handler:    _RemindersService_GetUpcomingReminders_Handler,
+		},
+		{
+			MethodName: "GetReminders",
+			Handler:    _RemindersService_GetReminders_Handler,
 		},
 		{
 			MethodName: "MarkReminderAsSent",

@@ -17,6 +17,7 @@ type RemindersService interface {
 	AddReminder(ctx context.Context, createRms models.CreateRms) (string, error)
 	GetUpcomingReminders(ctx context.Context) ([]models.Reminder, error)
 	MarkReminderAsSent(ctx context.Context, userID, rmID string) error
+	GetReminders(ctx context.Context, userID string) ([]models.Reminder, error)
 	DeleteReminder(ctx context.Context, userID, rmID string) error
 }
 
@@ -48,6 +49,19 @@ func (s *RemindersServiceServer) AddReminder(ctx context.Context, req *reminders
 
 func (s *RemindersServiceServer) GetUpcomingReminders(ctx context.Context, empty *emptypb.Empty) (*remindersProto.GetUpcomingRemindersResponse, error) {
 	rms, err := s.RmsSRV.GetUpcomingReminders(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	protoRms := s.convertToProtoReminders(rms)
+	return &remindersProto.GetUpcomingRemindersResponse{
+		Reminders: protoRms,
+	}, nil
+
+}
+
+func (s *RemindersServiceServer) GetReminders(ctx context.Context, req *remindersProto.GetRemindersRequest) (*remindersProto.GetUpcomingRemindersResponse, error) {
+	rms, err := s.RmsSRV.GetReminders(ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}
