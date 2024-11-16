@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+
+package reminders;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "proto;reminders";
+
+service RemindersService {
+  rpc AddReminder(AddReminderRequest) returns (AddReminderResponse);
+  rpc GetUpcomingReminders(google.protobuf.Empty) returns (GetUpcomingRemindersResponse);
+  rpc MarkReminderAsSent(DeleteReminderRequest) returns (google.protobuf.Empty);
+  rpc DeleteReminder(DeleteReminderRequest) returns (google.protobuf.Empty);
+}
+
+message AddReminderRequest {
+  CreateReminder request = 1;
+}
+
+message CreateReminder {
+  string userId = 1;
+  string action = 2;
+  string time = 3;
+  google.protobuf.StringValue date = 4;
+}
+
+message AddReminderResponse {
+  string response = 1;
+}
+
+message GetUpcomingRemindersResponse {
+  repeated Reminder reminders = 1;
+}
+
+message Reminder{
+  string userId = 1;
+  string action = 2;
+  string utctime = 3;
+  string originaltime = 4;
+}
+
+message DeleteReminderRequest {
+  string userId = 1;
+  string rmId = 2;
+}
