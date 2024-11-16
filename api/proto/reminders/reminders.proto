@@ -35,10 +35,11 @@ message GetUpcomingRemindersResponse {
 }
 
 message Reminder{
-  string userId = 1;
-  string action = 2;
-  string utctime = 3;
-  string originaltime = 4;
+  string Id = 1;
+  string userId = 2;
+  string action = 3;
+  string utctime = 4;
+  string originaltime = 5;
 }
 
 message DeleteReminderRequest {

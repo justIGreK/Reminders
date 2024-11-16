@@ -63,6 +63,7 @@ func (s *RemindersServiceServer) convertToProtoReminders(rms []models.Reminder) 
 	protoRms := make([]*remindersProto.Reminder, len(rms))
 	for i, b := range rms {
 		protoRms[i] = &remindersProto.Reminder{
+			Id:           b.ID,
 			UserId:       b.UserID,
 			Action:       b.Action,
 			Utctime:      b.Time.UTC().Format(DateTimeFormat),
